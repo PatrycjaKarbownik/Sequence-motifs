@@ -112,3 +112,4 @@ venv.bak/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+PSZT_Sequence_motifs.code-workspace
