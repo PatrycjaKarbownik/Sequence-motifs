@@ -1,8 +1,8 @@
 # Nucleotides codes
 A = 0
-T = 1
-G = 2
-C = 3
+C = 1
+T = 2
+G = 3
 
 
 def nucleotide_index(nucleotide_string):
