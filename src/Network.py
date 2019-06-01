@@ -1,3 +1,5 @@
+import random
+
 from src.FinalNeuron import FinalNeuron
 from src.Neuron import Neuron
 from src.input_patterns import load
@@ -64,7 +66,6 @@ class Network:
         actual_neurons = self.first_neurons
         parent_neuron = None
         while actual_layer != self.layers_amount:
-            print(actual_layer)
             winning_output = get_next_output(sequence, actual_neurons)
             min_value = winning_output.get_minimum_output(sequence)
             # Here we check our threshold value. If it's greater than our minimal value then we have to add
@@ -81,7 +82,7 @@ class Network:
         if winning_output.belongs(sequence):
             winning_output.append_sequence(sequence)
         else:
-            new_output = FinalNeuron(self.seq_size, self.max_error, parent_neuron.output_sequences)
+            new_output = FinalNeuron(self.seq_size, self.max_error, parent_neuron.output_neurons)
             new_output.append_sequence(sequence)
             self.final_neurons.append(new_output)
             parent_neuron.append_output(new_output)
@@ -111,9 +112,7 @@ class Network:
     def get_final_neurons(self):
         return self.final_neurons
 
-    # TODO FINISH THIS, IT IS UNUSABLE IN ITS CURRENT STATE
     def reduce_final_outputs(self):
-        raise NotImplementedError
         recycled_sequences = []
         for neuron in self.final_neurons:
             if neuron.seq_amount < self.threshold_seq_amount:
@@ -125,10 +124,31 @@ class Network:
 
 
 if __name__ == "__main__":
-    network = Network(5, 4, 3, [0.40, 0.6, 0.8], 2)
+    network = Network(5, 4, 2, [0.40, 0.6, 0.8], 3)
     patterns = load(5, "data1.txt")
     print(patterns)
     for pattern in patterns:
         network.input(pattern)
-    for neuron in network.final_neurons:
-        print()
+
+    print("\nRESULT FOR INITIAL TRY")
+    print("Sequence".rjust(5) + " Amount")
+    for n in network.final_neurons:
+        print(n.logo.get_motif() + " " + str(n.seq_amount))
+
+    leftovers = network.reduce_final_outputs()
+
+    print("\nRESULT WITHOUT REDUNDANT OUTPUTS")
+    print("Sequence".rjust(5) + " Amount")
+    for n in network.final_neurons:
+        print(n.logo.get_motif() + " " + str(n.seq_amount))
+
+    random.shuffle(leftovers)
+    for pattern in leftovers:
+        network.input(pattern)
+
+    print("\nRESULT AFTER USING LEFTOVERS")
+    print("Sequence".rjust(5) + " Amount")
+    for n in network.final_neurons:
+        if n.seq_amount < 3:
+            continue
+        print(n.logo.get_motif() + " " + str(n.seq_amount))

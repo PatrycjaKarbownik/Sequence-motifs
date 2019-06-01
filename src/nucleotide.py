@@ -14,3 +14,14 @@ def nucleotide_index(nucleotide_string):
         return G
     if nucleotide_string == "C":
         return C
+
+
+def nucleotide_letter(value):
+    if value == A:
+        return "A"
+    if value == C:
+        return "C"
+    if value == T:
+        return "T"
+    if value == G:
+        return "G"

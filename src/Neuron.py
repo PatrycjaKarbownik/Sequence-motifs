@@ -5,7 +5,6 @@ class Neuron:
 
     # It is important that parent may not be neuron. If neuron is in first layer than it's parent is just array
     def __init__(self, seq_size, parent):
-        print("Creating neuron of size " + str(seq_size))
         self.logo = Logo(seq_size)
         self.seq_size = seq_size
         self.parent = parent
@@ -35,6 +34,7 @@ class Neuron:
             min_value = match if match < min_value else min_value
         return min_value
 
+    # TODO get rid of this non-pythonic method
     def get_output_neurons(self):
         return self.output_neurons
 

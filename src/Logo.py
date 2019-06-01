@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.nucleotide import nucleotide_index
+from src.nucleotide import nucleotide_index, nucleotide_letter
 
 
 # TODO I am not sure whether we should keep probabilities in current form
@@ -57,11 +57,18 @@ class Logo:
         match = match / self.seq_size
         return match
 
-    # def get_motif(self):
-    #     motif = ""
-    #     for pos in range(self.seq_size):
+    def get_motif(self):
+        motif = ""
+        for pos in range(self.seq_size):
+            motif += self._get_max_probability(self.probabilities[pos])
+        return motif
 
-    #def _get_max_probability(self, ZZZ):
+    # TODO Maybe rewrite this
+    def _get_max_probability(self, probabilities):
+        max_value = max(probabilities)
+        for i in range(4):
+            if probabilities[i] == max_value:
+                return nucleotide_letter(i)
 
 
 if __name__ == "__main__":
@@ -72,3 +79,4 @@ if __name__ == "__main__":
     print("Probabilities:")
     print(logo.probabilities.transpose())
     print("Score of matching AGATC to logo: " + str(logo.calculate_matching("AGATC")))
+    print(logo.get_motif())

@@ -8,7 +8,6 @@ class FinalNeuron(Neuron):
 
     def __init__(self, seq_size, max_error, parent):
         super().__init__(seq_size, parent)
-        print("Creating final neuron with max_error value " + str(max_error))
         self.max_error = max_error
         self.seq_amount = 0
 
