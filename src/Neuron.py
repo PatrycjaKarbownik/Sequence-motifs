@@ -5,6 +5,7 @@ class Neuron:
     outputs = []
 
     def __init__(self, seq_size):
+        print("Creating neuron of size " + str(seq_size))
         self.logo = Logo(seq_size)
 
     def calculate_matching(self, sequence):

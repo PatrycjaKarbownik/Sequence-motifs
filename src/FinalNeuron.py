@@ -5,6 +5,7 @@ class FinalNeuron:
     outputs = []
 
     def __init__(self, max_error):
+        print("Creating final neuron with max_error value " + str(max_error))
         self.max_error = max_error
 
     def append_output(self, sequence):
