@@ -1,5 +1,6 @@
 from src.FinalNeuron import FinalNeuron
 from src.Neuron import Neuron
+from src.input_patterns import load
 
 
 def get_next_output(sequence, neurons):
@@ -8,7 +9,7 @@ def get_next_output(sequence, neurons):
     winning_output = None
     for neuron in neurons:
         match_value = neuron.calculate_matching(sequence)
-        if match_value > max_value:
+        if match_value >= max_value:
             max_value = match_value
             winning_output = neuron
     return winning_output
@@ -32,11 +33,11 @@ class Network:
         self.threshold_seq_amount = threshold_seq_amount
 
     def _create_neurons(self):
-        neuron = Neuron(self.seq_size)
+        neuron = Neuron(self.seq_size, self.first_neurons)
         self.first_neurons.append(neuron)
         actual_layer = 2
         while actual_layer != self.layers_amount:
-            new_neuron = Neuron(self.seq_size)
+            new_neuron = Neuron(self.seq_size, neuron)
             neuron.append_output(new_neuron)
             neuron = new_neuron
             actual_layer += 1
@@ -63,6 +64,7 @@ class Network:
         actual_neurons = self.first_neurons
         parent_neuron = None
         while actual_layer != self.layers_amount:
+            print(actual_layer)
             winning_output = get_next_output(sequence, actual_neurons)
             min_value = winning_output.get_minimum_output(sequence)
             # Here we check our threshold value. If it's greater than our minimal value then we have to add
@@ -71,7 +73,7 @@ class Network:
                 self._append_new_neurons(actual_layer, parent_neuron, sequence)
                 return
             winning_output.append_sequence(sequence)
-            actual_neurons = winning_output.get_output_sequences()
+            actual_neurons = winning_output.get_output_neurons()
             parent_neuron = winning_output
             actual_layer += 1
         # Now we're checking whether our sequence belongs to final category or we have to make another
@@ -92,12 +94,13 @@ class Network:
         from our parent neuron to the end. All these neurons have our sequence appended at the beginning.
         """
         while actual_layer != self.layers_amount:
-            new_neuron = Neuron(self.seq_size)
-            new_neuron.append_sequence(sequence)
             if parent_neuron is None:
+                new_neuron = Neuron(self.seq_size, self.first_neurons)
                 self.first_neurons.append(new_neuron)
             else:
+                new_neuron = Neuron(self.seq_size, parent_neuron)
                 parent_neuron.append_output(new_neuron)
+            new_neuron.append_sequence(sequence)
             parent_neuron = new_neuron
             actual_layer += 1
         new_neuron = FinalNeuron(self.seq_size, self.max_error, parent_neuron.output_neurons)
@@ -122,4 +125,10 @@ class Network:
 
 
 if __name__ == "__main__":
-    Network(5, 4, 3, [0.40, 0.6, 0.8], 2)
+    network = Network(5, 4, 3, [0.40, 0.6, 0.8], 2)
+    patterns = load(5, "data1.txt")
+    print(patterns)
+    for pattern in patterns:
+        network.input(pattern)
+    for neuron in network.final_neurons:
+        print()

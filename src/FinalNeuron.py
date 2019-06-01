@@ -5,14 +5,12 @@ class FinalNeuron(Neuron):
     """Final neuron which has raw sequences
 
     This neuron is different because we compare here not the logos based on probability but sequences."""
-    output_neurons = []
-    seq_amount = 0
 
-    def __init__(self, seq_size, max_error, parent_array):
-        super().__init__(seq_size)
+    def __init__(self, seq_size, max_error, parent):
+        super().__init__(seq_size, parent)
         print("Creating final neuron with max_error value " + str(max_error))
         self.max_error = max_error
-        self.parent_array = parent_array
+        self.seq_amount = 0
 
     # We're additionally adding whole sequence to our output's list instead of just adding to logo
     def append_sequence(self, sequence):
@@ -32,9 +30,6 @@ class FinalNeuron(Neuron):
 
     def get_sequences(self):
         return self.output_neurons
-
-    def leave_parent(self):
-        self.parent_array.remove(self)
 
 
 if __name__ == "__main__":

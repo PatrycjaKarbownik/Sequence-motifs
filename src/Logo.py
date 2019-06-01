@@ -57,6 +57,12 @@ class Logo:
         match = match / self.seq_size
         return match
 
+    # def get_motif(self):
+    #     motif = ""
+    #     for pos in range(self.seq_size):
+
+    #def _get_max_probability(self, ZZZ):
+
 
 if __name__ == "__main__":
     logo = Logo(5)

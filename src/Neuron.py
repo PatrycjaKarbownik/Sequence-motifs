@@ -2,11 +2,14 @@ from src.Logo import Logo
 
 
 class Neuron:
-    output_neurons = []
 
-    def __init__(self, seq_size):
+    # It is important that parent may not be neuron. If neuron is in first layer than it's parent is just array
+    def __init__(self, seq_size, parent):
         print("Creating neuron of size " + str(seq_size))
         self.logo = Logo(seq_size)
+        self.seq_size = seq_size
+        self.parent = parent
+        self.output_neurons = []
 
     def calculate_matching(self, sequence):
         return self.logo.calculate_matching(sequence)
@@ -34,6 +37,27 @@ class Neuron:
 
     def get_output_neurons(self):
         return self.output_neurons
+
+    def leave_parent(self):
+        """Removing neuron from it's parent output
+
+        This method is necessary because when we want to get rid of neuron (because i.e. final neuron doesn't meet the
+        requirements for being motif) we need to inform it's parent neuron (or array) to remove this object. The reason
+        why it is method in Neuron and not in FinalNeuron is that if FinalNeuron happens to be the only output neuron
+        of Neuron, then there is no point of keeping this neuron (and therefore we recursively remove neurons with
+        empty outputs.
+        """
+        if isinstance(self.parent, Neuron):
+            self.parent.output_neurons.remove(self)
+            if len(self.parent.output_neurons) == 0:
+                self.parent.leave_parent()
+        else:
+            # We need to check whether we're about to remove the only one neuron from network's first layer
+            # It is extremely unlikely but may happen. In this situation we simply clear neuron's logo (by creating new)
+            if len(self.parent) == 1:
+                self.logo = Logo(self.seq_size)
+            else:
+                self.parent.remove(self)
 
 
 if __name__ == "__main__":
