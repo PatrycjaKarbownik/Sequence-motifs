@@ -46,6 +46,9 @@ class Logo:
     def calculate_matching(self, sequence):
         if len(sequence) != self.seq_size:
             raise ValueError("Improper length of sequence")
+        # If logo doesn't have any sequences loaded than any new sequence is 100% match with this logo
+        if self.seq_amount == 0:
+            return 1
         match = 0
         for pos, char in enumerate(sequence):
             probability = self.probabilities[pos][nucleotide_index(char)]

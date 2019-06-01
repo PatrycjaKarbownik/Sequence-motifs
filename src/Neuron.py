@@ -2,7 +2,7 @@ from src.Logo import Logo
 
 
 class Neuron:
-    outputs = []
+    output_sequences = []
 
     def __init__(self, seq_size):
         print("Creating neuron of size " + str(seq_size))
@@ -15,7 +15,7 @@ class Neuron:
         self.logo.load_sequence(sequence)
 
     def append_output(self, neuron):
-        self.outputs.append(neuron)
+        self.output_sequences.append(neuron)
 
     def get_minimum_output(self, sequence):
         """Calculating minimal matching value in output neurons
@@ -27,7 +27,7 @@ class Neuron:
 
         """
         min_value = 1
-        for output in self.outputs:
+        for output in self.output_sequences:
             match = output.calculate_matching(sequence)
             min_value = match if match < min_value else min_value
         return min_value
