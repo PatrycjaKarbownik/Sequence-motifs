@@ -1,3 +1,4 @@
+import random
 import sys
 
 from Network import Network
