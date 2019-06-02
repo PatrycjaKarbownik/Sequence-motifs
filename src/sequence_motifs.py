@@ -2,22 +2,27 @@ import sys
 
 from Network import Network
 from input_patterns import load
-
+import random
 
 def printHelp():
-    print("Wprowadziles zle argumenty. Sprawdz czy spelniaja wymagania:")
-    print("- FILE_NAME           -> nazwa pliku w cudzyslowie, na przykład: \"data2.txt\"")
-    print("- SEQ_SIZE            -> dlugosc szukanych motywow (minimum 4)")
-    print("- LAYERS_AMOUNT       -> liczba warstw sieci (minimum 2)")
-    print("- MAX_ERROR           -> masymalna ilosc rozniacych sie znakow w motywie (minimum 0)")
-    print("- TRESHHOLD_SEQ_AMOUNT-> minimalna ilosc sekwencji uznana za motyw (minimum 2)")
-    print("- TRESHHOLD_VALUES    -> liczby z przedzialu <0;1> w ilosci LAYERS_AMOUNT - 1")
-
+    print("................................................................................................")
+    print("Wrong arguments. Check if they meet reguirements:                                              |")
+    print("- FILE_NAME           -> file with sequences, for example: \"data2.txt\"                         |")
+    print("- SEQ_SIZE            -> motifs' length (minimum 4)                                            |")
+    print("- LAYERS_AMOUNT       -> how many layers the network will have (minimum 2)                     |")
+    print("- MAX_ERROR           -> max number of nucleotides differences in motif (minimum 0)            |")
+    print("- TRESHHOLD_SEQ_AMOUNT-> minimum number of sequences which decide if it is a motif (minimum 2) |")
+    print("- TRESHHOLD_VALUES    -> (LAYERS_AMOUNT - 1) float numbers between 0 and 1                     |")
+    print("------------------------------------- EXAMPLE --------------------------------------------------")
+    print("|                                                                                              |")
+    print("|                python sequence_motifs.py \"data2.txt\" 5 3 5 4 0.2 0.4                         |")
+    print("|                                                                                              |")
+    print("------------------------------------------------------------------------------------------------")
 
 def checkValues(argList, count):
     if not isinstance(argList[1], str) or (argList[1].count(".txt") != 1):
         return False
-    if argList[2] < 4:                             # or argList[2] < 4:
+    if argList[2] < 4:
         return False
     if argList[3] < 2:
         return False
@@ -33,9 +38,9 @@ def checkValues(argList, count):
     return True
 
 if __name__ == "__main__":
-
     argList = sys.argv
     if len(argList) < 4 or len(argList) != 5+int(argList[3]):
+        print()
         printHelp()
     else:
         count = 5 + int(argList[3])
@@ -47,10 +52,10 @@ if __name__ == "__main__":
             argList[i] = float(argList[i])
             i = i+1
         if not checkValues(argList, count):
-            print("Ilosc parametrow dobra, ale zle wartosci...")
+            print("................................................................................................")
+            print("Number of arguments good, but wrong values...                                                  |")
             printHelp()
         else:
-            print("gites")
             TreshholdValues = []
             i = 6
             while i < count:
