@@ -57,6 +57,20 @@ class Logo:
         match = match / self.seq_size
         return match
 
+    def get_complex_motif(self):
+        motif = ""
+        for pos in range(self.seq_size):
+            tmp = ""
+            for char in ['A', 'C', 'G', 'T']:
+                if(self.counts[pos][nucleotide_index(char)] > 0):
+                    tmp += char
+
+            if(len(tmp) > 1):
+                motif += "[" + tmp + "]"
+            else:
+                motif += tmp
+        return motif
+
     def get_motif(self):
         motif = ""
         for pos in range(self.seq_size):

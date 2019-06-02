@@ -2,6 +2,7 @@ import sys
 
 from Network import Network
 from input_patterns import load
+from Motif import Motif
 import random
 
 def print_help():
@@ -84,9 +85,24 @@ if __name__ == "__main__":
             for pattern in leftovers:
                 network.input(pattern)
 
-            print("\nRESULT AFTER USING LEFTOVERS")
-            print("Sequence".rjust(5) + " Amount")
+            print("\nRESULT AFTER USING LEFTOVERS:")
+            print()
+            #print("MOTIF".ljust(arg_list[2]) + " AMOUNT")
+            motifs = []
             for n in network.final_neurons:
                 if n.seq_amount < arg_list[5]:
                     continue
-                print(n.logo.get_motif() + " " + str(n.seq_amount))
+                
+                motifs.append(Motif(n.logo.get_complex_motif(), n.logo.get_motif(), n.seq_amount))
+
+            motifs.sort(key=lambda x: x.seq_amount, reverse=True)
+            for motif in motifs:
+                print("COMPLEX MOTIF: ".ljust(15) + motif.complex_motif)
+                print("General motif:")
+                print("MOTIF: ".ljust(15) + motif.motif)
+                print("AMOUNT: ".ljust(15) + str(motif.seq_amount))
+                print("---------------------------------------------")
+            
+
+                
+
