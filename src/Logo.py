@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.nucleotide import nucleotide_index, nucleotide_letter
+from nucleotide import nucleotide_index, nucleotide_letter
 
 
 # TODO I am not sure whether we should keep probabilities in current form

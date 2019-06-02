@@ -1,7 +1,8 @@
 import sys
 
-from src.Network import Network
-from src.input_patterns import load
+from Network import Network
+from input_patterns import load
+
 
 def printHelp():
     print("Wprowadziles zle argumenty. Sprawdz czy spelniaja wymagania:")
@@ -11,6 +12,7 @@ def printHelp():
     print("- MAX_ERROR           -> masymalna ilosc rozniacych sie znakow w motywie (minimum 0)")
     print("- TRESHHOLD_SEQ_AMOUNT-> minimalna ilosc sekwencji uznana za motyw (minimum 2)")
     print("- TRESHHOLD_VALUES    -> liczby z przedzialu <0;1> w ilosci LAYERS_AMOUNT - 1")
+
 
 def checkValues(argList, count):
     if not isinstance(argList[1], str) or (argList[1].count(".txt") != 1):

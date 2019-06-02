@@ -1,4 +1,4 @@
-from src.Logo import Logo
+from Logo import Logo
 
 
 class Neuron:

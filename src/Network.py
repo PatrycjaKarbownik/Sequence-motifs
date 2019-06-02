@@ -1,8 +1,8 @@
 import random
 
-from src.FinalNeuron import FinalNeuron
-from src.Neuron import Neuron
-from src.input_patterns import load
+from FinalNeuron import FinalNeuron
+from Neuron import Neuron
+from input_patterns import load
 
 
 def get_next_output(sequence, neurons):

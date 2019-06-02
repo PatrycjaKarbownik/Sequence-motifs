@@ -1,4 +1,4 @@
-from src.Neuron import Neuron
+from Neuron import Neuron
 
 
 class FinalNeuron(Neuron):
