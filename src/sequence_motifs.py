@@ -98,7 +98,6 @@ if __name__ == "__main__":
             motifs.sort(key=lambda x: x.seq_amount, reverse=True)
             for motif in motifs:
                 print("COMPLEX MOTIF: ".ljust(15) + motif.complex_motif)
-                print("General motif:")
                 print("MOTIF: ".ljust(15) + motif.motif)
                 print("AMOUNT: ".ljust(15) + str(motif.seq_amount))
                 print("---------------------------------------------")
