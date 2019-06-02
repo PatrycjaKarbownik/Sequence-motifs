@@ -43,7 +43,7 @@ class Network:
             neuron.append_output(new_neuron)
             neuron = new_neuron
             actual_layer += 1
-        new_final_neuron = FinalNeuron(self.seq_size, self.max_error, neuron.output_neurons)
+        new_final_neuron = FinalNeuron(self.seq_size, self.max_error, neuron)
         self.final_neurons.append(new_final_neuron)
         neuron.append_output(new_final_neuron)
 
@@ -82,7 +82,7 @@ class Network:
         if winning_output.belongs(sequence):
             winning_output.append_sequence(sequence)
         else:
-            new_output = FinalNeuron(self.seq_size, self.max_error, parent_neuron.output_neurons)
+            new_output = FinalNeuron(self.seq_size, self.max_error, parent_neuron)
             new_output.append_sequence(sequence)
             self.final_neurons.append(new_output)
             parent_neuron.append_output(new_output)
@@ -104,7 +104,7 @@ class Network:
             new_neuron.append_sequence(sequence)
             parent_neuron = new_neuron
             actual_layer += 1
-        new_neuron = FinalNeuron(self.seq_size, self.max_error, parent_neuron.output_neurons)
+        new_neuron = FinalNeuron(self.seq_size, self.max_error, parent_neuron)
         new_neuron.append_sequence(sequence)
         self.final_neurons.append(new_neuron)
         parent_neuron.append_output(new_neuron)
@@ -121,6 +121,19 @@ class Network:
                 sequences.clear()
                 neuron.leave_parent()
         return recycled_sequences
+
+    def draw_network(self):
+        for neuron in self.first_neurons:
+            self._draw_connections(neuron)
+
+    def _draw_connections(self, node):
+        if isinstance(node, Neuron):
+            print("(" + node.logo.get_complex_motif() + ")" + str(len(node.output_neurons)) + " -> [ ", end='')
+            for child in node.output_neurons:
+                self._draw_connections(child)
+            print(" ] ", end='')
+        else:
+            print("\"" + node + "\" ", end='')
 
 
 if __name__ == "__main__":

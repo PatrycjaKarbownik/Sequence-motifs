@@ -38,6 +38,8 @@ class Neuron:
     def get_output_neurons(self):
         return self.output_neurons
 
+    @NotImplementedError
+    # TODO At this moment this function is unusable. It has to be rewritten
     def leave_parent(self):
         """Removing neuron from it's parent output
 
