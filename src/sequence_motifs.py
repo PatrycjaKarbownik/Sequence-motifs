@@ -3,62 +3,68 @@ import sys
 
 from Network import Network
 from input_patterns import load
+from Motif import Motif
+import random
 
+def print_help():
+    print("................................................................................................")
+    print("Wrong arguments. Check if they meet reguirements:                                              |")
+    print("- FILE_NAME           -> file with sequences, for example: \"data2.txt\"                         |")
+    print("- SEQ_SIZE            -> motifs' length (minimum 4)                                            |")
+    print("- LAYERS_AMOUNT       -> how many layers the network will have (minimum 2)                     |")
+    print("- MAX_ERROR           -> max number of nucleotides differences in motif (minimum 0)            |")
+    print("- THRESHOLD_SEQ_AMOUNT-> minimum number of sequences which decide if it is a motif (minimum 2) |")
+    print("- THRESHOLD_VALUES    -> (LAYERS_AMOUNT - 1) float numbers between 0 and 1                     |")
+    print("------------------------------------- EXAMPLE --------------------------------------------------")
+    print("|                                                                                              |")
+    print("|                python sequence_motifs.py \"data2.txt\" 5 3 5 4 0.2 0.4                         |")
+    print("|                                                                                              |")
+    print("------------------------------------------------------------------------------------------------")
 
-def printHelp():
-    print("Wprowadziles zle argumenty. Sprawdz czy spelniaja wymagania:")
-    print("- FILE_NAME           -> nazwa pliku w cudzyslowie, na przykład: \"data2.txt\"")
-    print("- SEQ_SIZE            -> dlugosc szukanych motywow (minimum 4)")
-    print("- LAYERS_AMOUNT       -> liczba warstw sieci (minimum 2)")
-    print("- MAX_ERROR           -> masymalna ilosc rozniacych sie znakow w motywie (minimum 0)")
-    print("- TRESHHOLD_SEQ_AMOUNT-> minimalna ilosc sekwencji uznana za motyw (minimum 2)")
-    print("- TRESHHOLD_VALUES    -> liczby z przedzialu <0;1> w ilosci LAYERS_AMOUNT - 1")
-
-
-def checkValues(argList, count):
-    if not isinstance(argList[1], str) or (argList[1].count(".txt") != 1):
+def check_values(arg_list, count):
+    if not isinstance(arg_list[1], str) or (arg_list[1].count(".txt") != 1):
         return False
-    if argList[2] < 4:                             # or argList[2] < 4:
+    if arg_list[2] < 4:
         return False
-    if argList[3] < 2:
+    if arg_list[3] < 2:
         return False
-    if argList[4] < 0:
+    if arg_list[4] < 0:
         return False
-    if argList[5] < 2:
+    if arg_list[5] < 2:
         return False
     iterator = 6
     while iterator < count:
-        if argList[iterator] < 0 or argList[iterator] > 1:
+        if arg_list[iterator] < 0 or arg_list[iterator] > 1:
             return False
         iterator = iterator+1
     return True
 
 if __name__ == "__main__":
-
-    argList = sys.argv
-    if len(argList) < 4 or len(argList) != 5+int(argList[3]):
-        printHelp()
+    arg_list = sys.argv
+    if len(arg_list) < 4 or len(arg_list) != 5+int(arg_list[3]):
+        print()
+        print_help()
     else:
-        count = 5 + int(argList[3])
+        count = 5 + int(arg_list[3])
         i = 2
         while i < 6:
-            argList[i] = int(argList[i])
+            arg_list[i] = int(arg_list[i])
             i = i+1
         while i < count:
-            argList[i] = float(argList[i])
+            arg_list[i] = float(arg_list[i])
             i = i+1
-        if not checkValues(argList, count):
-            print("Ilosc parametrow dobra, ale zle wartosci...")
-            printHelp()
+        if not check_values(arg_list, count):
+            print("................................................................................................")
+            print("Number of arguments good, but wrong values...                                                  |")
+            print_help()
         else:
-            print("gites")
-            TreshholdValues = []
+            threshold_values = []
             i = 6
             while i < count:
-                TreshholdValues.append(argList[i])
+                threshold_values.append(arg_list[i])
                 i = i+1
-            network = Network(argList[2], argList[3], argList[4], TreshholdValues, argList[5])
-            patterns = load(argList[2], argList[1])
+            network = Network(arg_list[2], arg_list[3], arg_list[4], threshold_values, arg_list[5])
+            patterns = load(arg_list[2], arg_list[1])
 
             print(patterns)
             for pattern in patterns:
@@ -80,9 +86,23 @@ if __name__ == "__main__":
             for pattern in leftovers:
                 network.input(pattern)
 
-            print("\nRESULT AFTER USING LEFTOVERS")
-            print("Sequence".rjust(5) + " Amount")
+            print("\nRESULT AFTER USING LEFTOVERS:")
+            print()
+            #print("MOTIF".ljust(arg_list[2]) + " AMOUNT")
+            motifs = []
             for n in network.final_neurons:
-                if n.seq_amount < argList[5]:
+                if n.seq_amount < arg_list[5]:
                     continue
-                print(n.logo.get_motif() + " " + str(n.seq_amount))
+                
+                motifs.append(Motif(n.logo.get_complex_motif(), n.logo.get_motif(), n.seq_amount))
+
+            motifs.sort(key=lambda x: x.seq_amount, reverse=True)
+            for motif in motifs:
+                print("COMPLEX MOTIF: ".ljust(15) + motif.complex_motif)
+                print("MOTIF: ".ljust(15) + motif.motif)
+                print("AMOUNT: ".ljust(15) + str(motif.seq_amount))
+                print("---------------------------------------------")
+            
+
+                
+
