@@ -26,7 +26,7 @@ class Logo:
     def load_sequences(self, sequences):
         for sequence in sequences:
             self.load_sequence(sequence, False)
-        self._calculate_probabilities()
+        self.calculate_probabilities()
 
     def load_sequence(self, sequence, recalculate=True):
         if len(sequence) != self.seq_size:
@@ -35,9 +35,9 @@ class Logo:
             self.counts[i][nucleotide_index(char)] += 1
         self.seq_amount += 1
         if recalculate:
-            self._calculate_probabilities()
+            self.calculate_probabilities()
 
-    def _calculate_probabilities(self):
+    def calculate_probabilities(self):
         for position in range(self.seq_size):
             for nucleotide in range(4):
                 count = self.counts[position][nucleotide]

@@ -119,7 +119,8 @@ class Network:
                 sequences = neuron.get_sequences()
                 recycled_sequences.extend(sequences)
                 sequences.clear()
-                neuron.leave_parent()
+                neuron.leave_parent(True)
+                self.final_neurons.remove(neuron)
         return recycled_sequences
 
     def draw_network(self):

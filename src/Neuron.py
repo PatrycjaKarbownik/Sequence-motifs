@@ -38,9 +38,10 @@ class Neuron:
     def get_output_neurons(self):
         return self.output_neurons
 
-    @NotImplementedError
-    # TODO At this moment this function is unusable. It has to be rewritten
-    def leave_parent(self):
+    # is_final_neuron is used to mark whether we're about to erase final neuron and therefore need to delete
+    # it's sequences' counts from it's parents. Since FinalNeuron inherits from Neuron we are not able to do this
+    # check by using isinstance()
+    def leave_parent(self, is_final_neuron):
         """Removing neuron from it's parent output
 
         This method is necessary because when we want to get rid of neuron (because i.e. final neuron doesn't meet the
@@ -49,17 +50,56 @@ class Neuron:
         of Neuron, then there is no point of keeping this neuron (and therefore we recursively remove neurons with
         empty outputs.
         """
+        if is_final_neuron:
+            self._adjust_logos(self, self.logo.counts)
         if isinstance(self.parent, Neuron):
-            self.parent.output_neurons.remove(self)
+            if self._able_to_leave(self):
+                self.parent.output_neurons.remove(self)
             if len(self.parent.output_neurons) == 0:
-                self.parent.leave_parent()
+                self.parent.leave_parent(False)
         else:
-            # We need to check whether we're about to remove the only one neuron from network's first layer
-            # It is extremely unlikely but may happen. In this situation we simply clear neuron's logo (by creating new)
-            if len(self.parent) == 1:
-                self.logo = Logo(self.seq_size)
-            else:
-                self.parent.remove(self)
+            self.parent.remove(self)
+
+    def _able_to_leave(self, parent):
+        """Method which tells us if neuron can be erased from network
+
+        This method is needed due to the fact that network needs at least one neuron per layer and this neurons
+        have to be connected. leave_parent reduces obsolete neurons from network but it may happen that none of
+        final neurons will have enough sequences to be called a motif. In this scenario this method proves to be
+        useful as it marks this danger and tells neuron that he cannot leave network.
+
+        Neuron is not allowed to leave when his parent and all parents way up to first layer has only one output.
+        """
+        if isinstance(parent, Neuron):
+            if len(parent.output_neurons) > 1:
+                return True
+            return self._able_to_leave(parent.parent)
+        else:
+            # This is the case when parent is not a neuron but a list. It happens when this function reaches first layer
+            if len(parent) > 1:
+                return True
+            return False
+
+    def _adjust_logos(self, parent, counts):
+        """Method which deletes outdated sequences data from logos
+
+        When obsolete (non-motif) neuron is deleted, it's parents still have information about it's sequences
+        in their's logos. Therefore we need to clear outdated information just by deleting counts and then
+        recalculating each logo.
+
+        It is important to run this method only for final neuron, because it's parents my be erased also and in this
+        situation we'd clear more sequences then there actually were.
+        """
+        if not isinstance(parent, Neuron):
+            return
+        parent_counts = parent.logo.counts
+        for count_pos in range(self.seq_size):
+            for nucleotide in range(4):
+                parent_counts[count_pos][nucleotide] -= counts[count_pos][nucleotide]
+        parent.logo.calculate_probabilities()
+        self._adjust_logos(parent.parent, counts)
+
+
 
 
 if __name__ == "__main__":
