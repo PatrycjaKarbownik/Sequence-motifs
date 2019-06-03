@@ -4,11 +4,12 @@ from Profile import Profile
 class Neuron:
 
     # It is important that parent may not be neuron. If neuron is in first layer than it's parent is just array
+    # The same goes for outputs, in last layer (FinalNeurons) they're raw sequences
     def __init__(self, seq_size, parent):
         self.profile = Profile(seq_size)
         self.seq_size = seq_size
         self.parent = parent
-        self.output_neurons = []
+        self.outputs = []
 
     def calculate_matching(self, sequence):
         return self.profile.calculate_matching(sequence)
@@ -17,7 +18,7 @@ class Neuron:
         self.profile.load_sequence(sequence)
 
     def append_output(self, neuron):
-        self.output_neurons.append(neuron)
+        self.outputs.append(neuron)
 
     def get_minimum_output(self, sequence):
         """Calculating minimal matching value in output neurons
@@ -29,14 +30,14 @@ class Neuron:
 
         """
         min_value = 1
-        for output in self.output_neurons:
+        for output in self.outputs:
             match = output.calculate_matching(sequence)
             min_value = match if match < min_value else min_value
         return min_value
 
     # TODO get rid of this non-pythonic method
-    def get_output_neurons(self):
-        return self.output_neurons
+    def get_outputs(self):
+        return self.outputs
 
     # is_final_neuron is used to mark whether we're about to erase final neuron and therefore need to delete
     # it's sequences' counts from it's parents. Since FinalNeuron inherits from Neuron we are not able to do this
@@ -54,8 +55,8 @@ class Neuron:
             self._adjust_profiles(self, self.profile.counts)
         if isinstance(self.parent, Neuron):
             if self._able_to_leave(self):
-                self.parent.output_neurons.remove(self)
-            if len(self.parent.output_neurons) == 0:
+                self.parent.outputs.remove(self)
+            if len(self.parent.outputs) == 0:
                 self.parent.leave_parent(False)
         else:
             self.parent.remove(self)
@@ -71,7 +72,7 @@ class Neuron:
         Neuron is not allowed to leave when his parent and all parents way up to first layer has only one output.
         """
         if isinstance(parent, Neuron):
-            if len(parent.output_neurons) > 1:
+            if len(parent.outputs) > 1:
                 return True
             return self._able_to_leave(parent.parent)
         else:

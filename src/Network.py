@@ -74,7 +74,7 @@ class Network:
                 self._append_new_neurons(actual_layer, parent_neuron, sequence)
                 return
             winning_output.append_sequence(sequence)
-            actual_neurons = winning_output.get_output_neurons()
+            actual_neurons = winning_output.outputs
             parent_neuron = winning_output
             actual_layer += 1
         # Now we're checking whether our sequence belongs to final category or we have to make another
@@ -129,8 +129,8 @@ class Network:
 
     def _draw_connections(self, node):
         if isinstance(node, Neuron):
-            print("(" + node.profile.get_complex_motif() + ")" + str(len(node.output_neurons)) + " -> [ ", end='')
-            for child in node.output_neurons:
+            print("(" + node.profile.get_complex_motif() + ")" + str(len(node.outputs)) + " -> [ ", end='')
+            for child in node.outputs:
                 self._draw_connections(child)
             print(" ] ", end='')
         else:

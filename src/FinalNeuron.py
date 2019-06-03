@@ -14,11 +14,11 @@ class FinalNeuron(Neuron):
     # We're additionally adding whole sequence to our output's list instead of just adding to profile
     def append_sequence(self, sequence):
         super().append_sequence(sequence)
-        self.output_neurons.append(sequence)
+        self.outputs.append(sequence)
         self.seq_amount += 1
 
     def belongs(self, sequence):
-        for output in self.output_neurons:
+        for output in self.outputs:
             error = 0
             for nucleotide_a, nucleotide_b in zip(output, sequence):
                 if nucleotide_a != nucleotide_b:
@@ -28,7 +28,7 @@ class FinalNeuron(Neuron):
         return True
 
     def get_sequences(self):
-        return self.output_neurons
+        return self.outputs
 
 
 if __name__ == "__main__":
