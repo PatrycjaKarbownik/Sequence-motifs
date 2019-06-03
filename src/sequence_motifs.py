@@ -102,27 +102,14 @@ if __name__ == "__main__":
     network = Network(seq_size, layers_amount, max_error, threshold_values, threshold_seq_amount)
     patterns = load(seq_size, file_name)
 
-    # print(patterns)
     for pattern in patterns:
         network.input(pattern)
 
-    print("########## INITIAL NETWORK ##########")
-    network.draw_network()
-
-    print("\n\n########## RESULT FOR INITIAL TRY ##########")
-    draw_motifs(network.final_neurons, 0)
-
     leftovers = network.reduce_final_outputs()
-
-    print("\n\n########## RESULT WITHOUT REDUNDANT OUTPUTS ##########")
-    draw_motifs(network.final_neurons, 0)
 
     random.shuffle(leftovers)
     for pattern in leftovers:
         network.input(pattern)
-
-    print("\n\n########## FINAL NETWORK ##########")
-    network.draw_network()
 
     print("\n\n########## FINAL RESULT ##########")
     print()
