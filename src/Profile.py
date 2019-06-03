@@ -4,13 +4,13 @@ from nucleotide import nucleotide_index, nucleotide_letter
 
 
 # TODO I am not sure whether we should keep probabilities in current form
-class Logo:
+class Profile:
     """Class that stores motif and is able to adjust dynamically
 
     This class is used to store information about given sequences. It knows how often certain nucleotide appeared at
     certain position (self.counts) and based on this it calculates probability of appearing chosen nucleotide on this
     spot. It is later used to calculate matching score, which basically tells us just how it is likely that given
-    sequence belongs to motif represented by this logo.
+    sequence belongs to motif represented by this profile.
     """
 
     def __init__(self, seq_size):
@@ -18,9 +18,9 @@ class Logo:
         self.counts = np.zeros((seq_size, 4))
         # probabilities are self-explanatory
         self.probabilities = np.zeros((seq_size, 4))
-        # seq_amount is amount of sequences used to build logo
+        # seq_amount is amount of sequences used to build profile
         self.seq_amount = 0
-        # size determines size of sequences used to build logo
+        # size determines size of sequences used to build profile
         self.seq_size = seq_size
 
     def load_sequences(self, sequences):
@@ -46,7 +46,7 @@ class Logo:
     def calculate_matching(self, sequence):
         if len(sequence) != self.seq_size:
             raise ValueError("Improper length of sequence")
-        # If logo doesn't have any sequences loaded than any new sequence is 100% match with this logo
+        # If profile doesn't have any sequences loaded than any new sequence is 100% match with this profile
         if self.seq_amount == 0:
             return 1
         match = 0
@@ -86,11 +86,11 @@ class Logo:
 
 
 if __name__ == "__main__":
-    logo = Logo(5)
+    profile = Profile(5)
     example_sequences = ["ATAGT", "ACGGT", "ATAGT", "ATAGT"]
-    logo.load_sequences(example_sequences)
+    profile.load_sequences(example_sequences)
     print("Order:\nA\nT\nG\nC")
     print("Probabilities:")
-    print(logo.probabilities.transpose())
-    print("Score of matching AGATC to logo: " + str(logo.calculate_matching("AGATC")))
-    print(logo.get_motif())
+    print(profile.probabilities.transpose())
+    print("Score of matching AGATC to profile: " + str(profile.calculate_matching("AGATC")))
+    print(profile.get_motif())

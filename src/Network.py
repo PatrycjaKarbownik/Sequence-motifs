@@ -129,7 +129,7 @@ class Network:
 
     def _draw_connections(self, node):
         if isinstance(node, Neuron):
-            print("(" + node.logo.get_complex_motif() + ")" + str(len(node.output_neurons)) + " -> [ ", end='')
+            print("(" + node.profile.get_complex_motif() + ")" + str(len(node.output_neurons)) + " -> [ ", end='')
             for child in node.output_neurons:
                 self._draw_connections(child)
             print(" ] ", end='')
@@ -147,14 +147,14 @@ if __name__ == "__main__":
     print("\nRESULT FOR INITIAL TRY")
     print("Sequence".rjust(5) + " Amount")
     for n in network.final_neurons:
-        print(n.logo.get_motif() + " " + str(n.seq_amount))
+        print(n.profile.get_motif() + " " + str(n.seq_amount))
 
     leftovers = network.reduce_final_outputs()
 
     print("\nRESULT WITHOUT REDUNDANT OUTPUTS")
     print("Sequence".rjust(5) + " Amount")
     for n in network.final_neurons:
-        print(n.logo.get_motif() + " " + str(n.seq_amount))
+        print(n.profile.get_motif() + " " + str(n.seq_amount))
 
     random.shuffle(leftovers)
     for pattern in leftovers:
@@ -165,4 +165,4 @@ if __name__ == "__main__":
     for n in network.final_neurons:
         if n.seq_amount < 3:
             continue
-        print(n.logo.get_motif() + " " + str(n.seq_amount))
+        print(n.profile.get_motif() + " " + str(n.seq_amount))

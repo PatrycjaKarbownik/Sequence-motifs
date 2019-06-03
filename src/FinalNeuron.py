@@ -4,14 +4,14 @@ from Neuron import Neuron
 class FinalNeuron(Neuron):
     """Final neuron which has raw sequences
 
-    This neuron is different because we compare here not the logos based on probability but sequences."""
+    This neuron is different because we compare here not the profiles based on probability but sequences."""
 
     def __init__(self, seq_size, max_error, parent):
         super().__init__(seq_size, parent)
         self.max_error = max_error
         self.seq_amount = 0
 
-    # We're additionally adding whole sequence to our output's list instead of just adding to logo
+    # We're additionally adding whole sequence to our output's list instead of just adding to profile
     def append_sequence(self, sequence):
         super().append_sequence(sequence)
         self.output_neurons.append(sequence)

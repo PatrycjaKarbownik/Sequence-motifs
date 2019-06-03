@@ -48,7 +48,7 @@ def draw_motifs(neurons, minimal_seq_amount):
     for n in neurons:
         if n.seq_amount < minimal_seq_amount:
             continue
-        motifs.append(Motif(n.logo.get_complex_motif(), n.logo.get_motif(), n.seq_amount))
+        motifs.append(Motif(n.profile.get_complex_motif(), n.profile.get_motif(), n.seq_amount))
 
     motifs.sort(key=lambda x: x.seq_amount, reverse=True)
     for motif in motifs:

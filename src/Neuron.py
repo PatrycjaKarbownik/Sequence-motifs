@@ -1,20 +1,20 @@
-from Logo import Logo
+from Profile import Profile
 
 
 class Neuron:
 
     # It is important that parent may not be neuron. If neuron is in first layer than it's parent is just array
     def __init__(self, seq_size, parent):
-        self.logo = Logo(seq_size)
+        self.profile = Profile(seq_size)
         self.seq_size = seq_size
         self.parent = parent
         self.output_neurons = []
 
     def calculate_matching(self, sequence):
-        return self.logo.calculate_matching(sequence)
+        return self.profile.calculate_matching(sequence)
 
     def append_sequence(self, sequence):
-        self.logo.load_sequence(sequence)
+        self.profile.load_sequence(sequence)
 
     def append_output(self, neuron):
         self.output_neurons.append(neuron)
@@ -51,7 +51,7 @@ class Neuron:
         empty outputs.
         """
         if is_final_neuron:
-            self._adjust_logos(self, self.logo.counts)
+            self._adjust_profiles(self, self.profile.counts)
         if isinstance(self.parent, Neuron):
             if self._able_to_leave(self):
                 self.parent.output_neurons.remove(self)
@@ -80,27 +80,21 @@ class Neuron:
                 return True
             return False
 
-    def _adjust_logos(self, parent, counts):
-        """Method which deletes outdated sequences data from logos
+    def _adjust_profiles(self, parent, counts):
+        """Method which deletes outdated sequences data from profiles
 
         When obsolete (non-motif) neuron is deleted, it's parents still have information about it's sequences
-        in their's logos. Therefore we need to clear outdated information just by deleting counts and then
-        recalculating each logo.
+        in their's profiles. Therefore we need to clear outdated information just by deleting counts and then
+        recalculating each profiles.
 
         It is important to run this method only for final neuron, because it's parents my be erased also and in this
         situation we'd clear more sequences then there actually were.
         """
         if not isinstance(parent, Neuron):
             return
-        parent_counts = parent.logo.counts
+        parent_counts = parent.profile.counts
         for count_pos in range(self.seq_size):
             for nucleotide in range(4):
                 parent_counts[count_pos][nucleotide] -= counts[count_pos][nucleotide]
-        parent.logo.calculate_probabilities()
-        self._adjust_logos(parent.parent, counts)
-
-
-
-
-if __name__ == "__main__":
-    pass
+        parent.profile.calculate_probabilities()
+        self._adjust_profiles(parent.parent, counts)
