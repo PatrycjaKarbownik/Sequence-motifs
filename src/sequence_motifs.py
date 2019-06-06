@@ -60,15 +60,11 @@ def draw_motifs(neurons, minimal_seq_amount):
 
 def input_to_network(network, inputs):
     inputs_amount = len(inputs)
-    one_hundredth = inputs_amount / 100
-    threshold = inputs_amount / 100
     counter = 0
     for pattern in inputs:
         counter += 1
-        if counter > threshold:
-            progress = int((counter / inputs_amount) * 100)
-            threshold = progress * one_hundredth
-            sys.stdout.write("\rInitial calculation progress: %d/100" % progress)
+        if counter % 100 == 0:
+            sys.stdout.write("\rCalculation progress: {:d}/{:d}".format(counter, inputs_amount))
             sys.stdout.flush()
         network.input(pattern)
     print()
