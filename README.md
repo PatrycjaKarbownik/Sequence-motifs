@@ -20,4 +20,6 @@ THRESHOLD_SEQ_AMOUNT-> minimum number of sequences which decide if it is a motif
 THRESHOLD_VALUES    -> (LAYERS_AMOUNT - 1) float numbers between 0 and 1 
 
 e.g. <br>
-python3 sequence_motifs.py "data2.txt" 5 3 5 4 0.2 0.4
+python3 sequence_motifs.py "data1.txt" 5 3 5 4 0.2 0.4 <br>
+python3 sequence_motifs.py "data1.txt" 7 4 3 5 0.4 0.6 0.8 <br>
+python3 sequence_motifs.py "data3.txt" 13 6 5 5 0.1 0.35 0.5 0.6 0.7 <br>
