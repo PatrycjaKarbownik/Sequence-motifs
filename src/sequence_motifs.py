@@ -58,6 +58,20 @@ def draw_motifs(neurons, minimal_seq_amount):
         print("---------------------------------------------")
 
 
+def input_to_network(network, inputs):
+    one_hundredth = int(len(patterns) / 100)
+    progress = 0
+    counter = 0
+    for pattern in inputs:
+        counter += 1
+        if counter % one_hundredth == 0:
+            counter = 0
+            progress += 1
+            sys.stdout.write("\rInitial calculation progress: %d/100" % progress)
+            sys.stdout.flush()
+        network.input(pattern)
+
+
 def set_up():
     arg_list = sys.argv
     if len(arg_list) < 4 or len(arg_list) != 5 + int(arg_list[3]):
@@ -102,14 +116,14 @@ if __name__ == "__main__":
     network = Network(seq_size, layers_amount, max_error, threshold_values, threshold_seq_amount)
     patterns = load(seq_size, file_name)
 
-    for pattern in patterns:
-        network.input(pattern)
+    input_to_network(network, patterns)
 
     leftovers = network.reduce_final_outputs()
 
     random.shuffle(leftovers)
-    for pattern in leftovers:
-        network.input(pattern)
+
+    print("Recycling and shuffling non-motifs")
+    input_to_network(network, leftovers)
 
     print("\n\n########## FINAL RESULT ##########")
     print()
