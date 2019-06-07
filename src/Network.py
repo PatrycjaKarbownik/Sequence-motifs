@@ -127,14 +127,16 @@ class Network:
         for neuron in self.first_neurons:
             self._draw_connections(neuron)
 
-    def _draw_connections(self, node):
-        if isinstance(node, Neuron):
-            print("(" + node.profile.get_complex_motif() + ")" + str(len(node.outputs)) + " -> [ ", end='')
+    def _draw_connections(self, node, spaces=0):
+        if not isinstance(node, Neuron):
+            return
+        for i in range(spaces):
+            print('\t', end='')
+        outputs_name = "Sequences" if isinstance(node, FinalNeuron) else "Output neurons"
+        print(node.profile.get_complex_motif() + " " + outputs_name + ": " + str(len(node.outputs)))
+        if not isinstance(node, FinalNeuron):
             for child in node.outputs:
-                self._draw_connections(child)
-            print(" ] ", end='')
-        else:
-            print("\"" + node + "\" ", end='')
+                self._draw_connections(child, spaces + 1)
 
 
 if __name__ == "__main__":
