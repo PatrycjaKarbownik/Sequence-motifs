@@ -41,7 +41,7 @@ class Profile:
         for position in range(self.seq_size):
             for nucleotide in range(4):
                 count = self.counts[position][nucleotide]
-                self.probabilities[position][nucleotide] = count / self.seq_amount
+                self.probabilities[position][nucleotide] = count / self.seq_amount if self.seq_amount > 0 else 0
 
     def calculate_matching(self, sequence):
         if len(sequence) != self.seq_size:
@@ -62,10 +62,10 @@ class Profile:
         for pos in range(self.seq_size):
             tmp = ""
             for char in ['A', 'C', 'G', 'T']:
-                if(self.counts[pos][nucleotide_index(char)] > 0):
+                if self.counts[pos][nucleotide_index(char)] > 0:
                     tmp += char
 
-            if(len(tmp) > 1):
+            if len(tmp) > 1:
                 motif += "[" + tmp + "]"
             else:
                 motif += tmp

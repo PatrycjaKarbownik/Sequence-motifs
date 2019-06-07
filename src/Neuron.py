@@ -52,7 +52,7 @@ class Neuron:
         empty outputs.
         """
         if is_final_neuron:
-            self._adjust_profiles(self, self.profile.counts)
+            self._adjust_profiles(self, self.profile.counts.copy(), self.profile.seq_amount)
         if isinstance(self.parent, Neuron):
             if self._able_to_leave(self):
                 self.parent.outputs.remove(self)
@@ -81,7 +81,7 @@ class Neuron:
                 return True
             return False
 
-    def _adjust_profiles(self, parent, counts):
+    def _adjust_profiles(self, parent, counts, seq_amount):
         """Method which deletes outdated sequences data from profiles
 
         When obsolete (non-motif) neuron is deleted, it's parents still have information about it's sequences
@@ -97,5 +97,6 @@ class Neuron:
         for count_pos in range(self.seq_size):
             for nucleotide in range(4):
                 parent_counts[count_pos][nucleotide] -= counts[count_pos][nucleotide]
+        parent.profile.seq_amount -= seq_amount
         parent.profile.calculate_probabilities()
-        self._adjust_profiles(parent.parent, counts)
+        self._adjust_profiles(parent.parent, counts, seq_amount)
