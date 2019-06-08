@@ -1,29 +1,10 @@
 import argparse
-import collections
-import random
 import sys
 
 from Network import Network
-from Neuron import Neuron
 from input_patterns import load
 from Motif import Motif
 import random
-
-
-def print_help():
-    print("................................................................................................")
-    print("Wrong arguments. Check if they meet reguirements:                                              |")
-    print("- FILE_NAME           -> file with sequences, for example: \"data2.txt\"                         |")
-    print("- SEQ_SIZE            -> motifs' length (minimum 4)                                            |")
-    print("- LAYERS_AMOUNT       -> how many layers the network will have (minimum 2)                     |")
-    print("- MAX_ERROR           -> max number of nucleotides differences in motif (minimum 0)            |")
-    print("- THRESHOLD_SEQ_AMOUNT-> minimum number of sequences which decide if it is a motif (minimum 2) |")
-    print("- THRESHOLD_VALUES    -> (LAYERS_AMOUNT - 1) float numbers between 0 and 1                     |")
-    print("------------------------------------- EXAMPLE --------------------------------------------------")
-    print("|                                                                                              |")
-    print("|                python sequence_motifs.py \"data2.txt\" 5 3 5 4 0.2 0.4                         |")
-    print("|                                                                                              |")
-    print("------------------------------------------------------------------------------------------------")
 
 
 def check_values(arg_list, count):
@@ -60,7 +41,7 @@ def draw_motifs(neurons, minimal_seq_amount):
         print("---------------------------------------------")
 
 
-def input_to_network(network, inputs):
+def input_to_network(network_, inputs):
     inputs_amount = len(inputs)
     counter = 0
     for pattern in inputs:
@@ -68,46 +49,10 @@ def input_to_network(network, inputs):
         if counter % 100 == 0:
             sys.stdout.write("\rCalculation progress: {:d}/{:d}".format(counter, inputs_amount))
             sys.stdout.flush()
-        network.input(pattern)
+        network_.input(pattern)
+    sys.stdout.write("\rCalculation progress: {0}/{0}".format(inputs_amount))
+    sys.stdout.flush()
     print()
-
-
-# def set_up():
-#     arg_list = sys.argv
-#     if len(arg_list) < 4 or len(arg_list) != 5 + int(arg_list[3]):
-#         print_help()
-#         return False, None, None, None, None, None, None
-#
-#     try:
-#         file_name = arg_list[1]
-#         seq_size = int(arg_list[2])
-#         layers_amount = int(arg_list[3])
-#         max_error = int(arg_list[4])
-#         threshold_seq_amount = int(arg_list[5])
-#         threshold_values = []
-#         count = 5 + int(arg_list[3])
-#         i = 2
-#         while i < 6:
-#             arg_list[i] = int(arg_list[i])
-#             i = i + 1
-#         while i < count:
-#             arg_list[i] = float(arg_list[i])
-#             i = i + 1
-#         if not check_values(arg_list, count):
-#             print("Program received wrong")
-#             print_help()
-#             return False, None, None, None, None, None, None
-#         else:
-#             i = 6
-#             while i < count:
-#                 threshold_values.append(arg_list[i])
-#                 i = i + 1
-#     except (ValueError, TypeError):
-#         print("Wrong values")
-#         print_help()
-#         return False, None, None, None, None, None, None
-#     return True, file_name, seq_size, layers_amount, max_error, threshold_seq_amount, threshold_values
-
 
 def sequence_size(string):
     return check_integer(string, "Size of sequence")
@@ -153,22 +98,22 @@ def threshold_value(string):
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Find motifs in given sequences")
-    parser.add_argument("file_name", help="Name of file with data in /data folder")
-    parser.add_argument("sequence_size", type=sequence_size, help="Number of nucleotides in motif")
+    parser.add_argument("file_name", help="name of file with data in /data folder")
+    parser.add_argument("sequence_size", type=sequence_size, help="number of nucleotides in motif")
     parser.add_argument("max_error", type=max_error,
-                        help="Maximum number of differences between two sequences that can be considered "
+                        help="maximum number of differences between two sequences that can be considered "
                              "as the same motif")
     parser.add_argument("-l", "--layers", default=4, type=layers_amount, metavar="amount",
-                        help="Number of layers of neural network "
+                        help="number of layers of neural network "
                              "(more of them means faster work and more diverse results). It has to be at least 2")
     parser.add_argument("-m", "--min_sequences", type=min_sequences, metavar="amount", default=4,
-                        help="Minimum number of sequences that can be classified as motif")
+                        help="minimum number of sequences that can be classified as motif")
     parser.add_argument("-t", "--thresholds", type=lambda s: map(threshold_value, s.split(",")), metavar="N",
-                        help="Values for thresholds in layers (there have to be one less than there is layers, "
+                        help="values for thresholds in layers (there have to be one less than there is layers, "
                              "they also should be in ascending order, so network will categorize sequences making "
                              "with every step. They had to be separated by \",\", for example: 0.2,0.4,0.6")
     parser.add_argument("-d", "--debug", action="store_true",
-                        help="At the end of calculations print structure of network and it's motifs")
+                        help="at the end of calculations print structure of network and it's motifs")
     return parser
 
 
@@ -194,7 +139,6 @@ def set_up_network(args_):
     max_error_ = args_.max_error
     layers = args_.layers
     threshold_seq_amount_ = args_.min_sequences
-    print(type(args_.thresholds))
     threshold_values = list(args_.thresholds) if isinstance(args_.thresholds, map) \
         else default_thresholds(layers)
     if len(threshold_values) >= layers:
@@ -206,9 +150,6 @@ def set_up_network(args_):
 if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
-    print(args)
-    print("Threshold values: ", end='')
-    print(default_thresholds(7))
     network = set_up_network(args)
     file_name = args.file_name
     threshold_seq_amount = args.min_sequences
@@ -222,10 +163,6 @@ if __name__ == "__main__":
     leftovers = network.reduce_final_outputs()
 
     random.shuffle(leftovers)
-
-    if debug_mode:
-        print("########## LEFTOVER STRUCTURE ##########")
-        network.draw_network()
 
     print("Recycling and shuffling non-motifs")
     input_to_network(network, leftovers)
