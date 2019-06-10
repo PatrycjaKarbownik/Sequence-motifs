@@ -3,13 +3,7 @@ import numpy as np
 from nucleotide import nucleotide_index, nucleotide_letter
 
 
-def get_max_probability(probabilities):
-    max_value = max(probabilities)
-    for i in range(4):
-        if probabilities[i] == max_value:
-            return nucleotide_letter[i]
-
-
+# TODO I am not sure whether we should keep probabilities in current form
 class Profile:
     """Class that stores motif and is able to adjust dynamically
 
@@ -38,7 +32,7 @@ class Profile:
         if len(sequence) != self.seq_size:
             return
         for i, char in enumerate(sequence):
-            self.counts[i][nucleotide_index[char]] += 1
+            self.counts[i][nucleotide_index(char)] += 1
         self.seq_amount += 1
         if recalculate:
             self.calculate_probabilities()
@@ -57,7 +51,7 @@ class Profile:
             return 1
         match = 0
         for pos, char in enumerate(sequence):
-            probability = self.probabilities[pos][nucleotide_index[char]]
+            probability = self.probabilities[pos][nucleotide_index(char)]
             match += probability
         # Scaling score so it is in range from 0 to 1
         match = match / self.seq_size
@@ -68,7 +62,7 @@ class Profile:
         for pos in range(self.seq_size):
             tmp = ""
             for char in ['A', 'C', 'G', 'T']:
-                if self.counts[pos][nucleotide_index[char]] > 0:
+                if self.counts[pos][nucleotide_index(char)] > 0:
                     tmp += char
 
             if len(tmp) > 1:
@@ -80,8 +74,15 @@ class Profile:
     def get_motif(self):
         motif = ""
         for pos in range(self.seq_size):
-            motif += get_max_probability(self.probabilities[pos])
+            motif += self._get_max_probability(self.probabilities[pos])
         return motif
+
+    # TODO Maybe rewrite this
+    def _get_max_probability(self, probabilities):
+        max_value = max(probabilities)
+        for i in range(4):
+            if probabilities[i] == max_value:
+                return nucleotide_letter(i)
 
 
 if __name__ == "__main__":
