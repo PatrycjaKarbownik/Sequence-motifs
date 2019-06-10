@@ -7,25 +7,6 @@ from Motif import Motif
 import random
 
 
-def check_values(arg_list, count):
-    if not isinstance(arg_list[1], str) or (arg_list[1].count(".txt") != 1):
-        return False
-    if arg_list[2] < 4:
-        return False
-    if arg_list[3] < 2:
-        return False
-    if arg_list[4] < 0:
-        return False
-    if arg_list[5] < 2:
-        return False
-    iterator = 6
-    while iterator < count:
-        if arg_list[iterator] < 0 or arg_list[iterator] > 1:
-            return False
-        iterator = iterator + 1
-    return True
-
-
 def draw_motifs(neurons, minimal_seq_amount):
     motifs = []
     for n in neurons:
@@ -107,7 +88,7 @@ def create_parser():
     parser.add_argument("-l", "--layers", default=4, type=layers_amount, metavar="amount",
                         help="number of layers of neural network "
                              "(more of them means faster work and more diverse results). It has to be at least 2")
-    parser.add_argument("-m", "--min_sequences", type=min_sequences, metavar="amount", default=4,
+    parser.add_argument("min_sequences", type=min_sequences, metavar="amount", default=4,
                         help="minimum number of sequences that can be classified as motif")
     parser.add_argument("-t", "--thresholds", type=lambda s: map(threshold_value, s.split(",")), metavar="N",
                         help="values for thresholds in layers (there have to be one less than there is layers, "
