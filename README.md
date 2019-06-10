@@ -12,7 +12,7 @@ Create neural network, which finds motifs from DNA sequences.
 ### Execute:
 python3 *sequence_motifs.py* <FILE_NAME> <SEQ_SIZE> <MAX_ERROR> <MIN_SEQUENCES> [<OPTIONAL_PARAMETERS>]
 
-| Flagi | Parametry | Znaczenie | Default value |
+| Flags | Parametets | Meaning | Default value |
 | ------ | ------ | ------ | ------ |
 |-|<FILE_NAME>,<br> file has to be in "data" folder| Name of file with sequences.| - |
 |-|<SEQ_SIZE>,<br> integer number | Number of nucleotides in finding motifs | - |
