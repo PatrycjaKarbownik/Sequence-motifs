@@ -54,6 +54,7 @@ def input_to_network(network_, inputs):
     sys.stdout.flush()
     print()
 
+
 def sequence_size(string):
     return check_integer(string, "Size of sequence")
 
