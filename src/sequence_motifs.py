@@ -88,7 +88,7 @@ def create_parser():
     parser.add_argument("-l", "--layers", default=4, type=layers_amount, metavar="amount",
                         help="number of layers of neural network "
                              "(more of them means faster work and more diverse results). It has to be at least 2")
-    parser.add_argument("min_sequences", type=min_sequences, metavar="amount", default=4,
+    parser.add_argument("min_sequences", type=min_sequences, default=4,
                         help="minimum number of sequences that can be classified as motif")
     parser.add_argument("-t", "--thresholds", type=lambda s: map(threshold_value, s.split(",")), metavar="N",
                         help="values for thresholds in layers (there have to be one less than there is layers, "
