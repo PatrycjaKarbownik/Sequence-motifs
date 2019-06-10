@@ -35,10 +35,6 @@ class Neuron:
             min_value = match if match < min_value else min_value
         return min_value
 
-    # TODO get rid of this non-pythonic method
-    def get_outputs(self):
-        return self.outputs
-
     # is_final_neuron is used to mark whether we're about to erase final neuron and therefore need to delete
     # it's sequences' counts from it's parents. Since FinalNeuron inherits from Neuron we are not able to do this
     # check by using isinstance()
